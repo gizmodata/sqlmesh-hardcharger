@@ -17,6 +17,8 @@ pip install sqlmesh-gizmosql
 
 This will install `sqlmesh` and `adbc-driver-gizmosql` as dependencies.
 
+As of v0.3.0, this adapter runs on [adbc-driver-gizmosql](https://pypi.org/project/adbc-driver-gizmosql/) 2.0, powered by the new [native Go GizmoSQL ADBC driver](https://github.com/gizmodata/gizmosql-adbc) — same API as before, with DDL/DML immediate execution, `RETURNING` support, `gizmosql://` URIs, and OAuth/SSO provided by the shared Go driver library used across all languages.
+
 ## Usage
 
 ### 1. Import the adapter
@@ -97,7 +99,7 @@ gateways:
 ## Requirements
 
 - Python >= 3.10
-- SQLMesh >= 0.100.0
+- SQLMesh >= 0.236.1
 - A running GizmoSQL server with DuckDB backend
 
 ## Development

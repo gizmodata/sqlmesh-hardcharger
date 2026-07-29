@@ -7,10 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-29
+
 ### Changed
 
-- Bumped `adbc-driver-gizmosql` minimum version to `>=2.0.0` (the
-  Go-backed rewrite of the driver; API byte-compatible with 1.x).
+- Bumped `adbc-driver-gizmosql` minimum version to `>=2.0.0`. The 2.0
+  driver is powered by the new
+  [native Go GizmoSQL ADBC driver](https://github.com/gizmodata/gizmosql-adbc)
+  — same API as 1.x, with DDL/DML immediate execution, `RETURNING`
+  support, `gizmosql://` URIs, and OAuth/SSO provided by the shared Go
+  driver library used across all languages.
 - Raised all other dependency floors to current stable releases:
   `sqlmesh>=0.236.1`; dev extras `pytest>=9.1.1`, `pytest-cov>=7.1.0`,
   `mypy>=2.3.0`, `ruff>=0.16.0`, `gizmosql>=1.35.1`. Refreshed
