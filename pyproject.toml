@@ -28,17 +28,17 @@ classifiers = [
 ]
 
 dependencies = [
-    "sqlmesh>=0.234.0",
-    "adbc-driver-gizmosql>=1.1.6",
+    "sqlmesh>=0.236.1",
+    "adbc-driver-gizmosql>=2.0.0",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
-    "mypy>=1.0.0",
-    "ruff>=0.1.0",
-    "gizmosql>=1.26.0",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "mypy>=2.3.0",
+    "ruff>=0.16.0",
+    "gizmosql>=1.35.1",
 ]
 
 [project.urls]

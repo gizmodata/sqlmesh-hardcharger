@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Bumped `adbc-driver-gizmosql` minimum version to `>=2.0.0` (the
+  Go-backed rewrite of the driver; API byte-compatible with 1.x).
+- Raised all other dependency floors to current stable releases:
+  `sqlmesh>=0.236.1`; dev extras `pytest>=9.1.1`, `pytest-cov>=7.1.0`,
+  `mypy>=2.3.0`, `ruff>=0.16.0`, `gizmosql>=1.35.1`. Refreshed
+  `uv.lock` accordingly.
+- Bumped GitHub Actions to current majors in `ci.yml`:
+  `actions/checkout@v7`, `actions/setup-python@v7`, `actions/cache@v6`,
+  `actions/upload-artifact@v7`, `actions/download-artifact@v8`,
+  `softprops/action-gh-release@v3`.
+
+### Fixed
+
+- DataFrame bulk ingestion works again with current dependencies: with
+  driver 1.x and `arrow-adbc` 1.12, statement reuse after `adbc_ingest`
+  was broken, failing the DataFrame bulk-ingestion path. Driver 2.0
+  handles statement reuse in-driver, fixing ingestion in this
+  dependency set.
+
 ## [0.2.5] - 2026-05-10
 
 ### Changed
