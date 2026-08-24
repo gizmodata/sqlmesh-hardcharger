@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sqlmesh-gizmosql"
-version = "0.3.0"
+version = "0.3.1"
 description = "GizmoSQL engine adapter for SQLMesh"
 readme = "README.md"
 license = {text = "Apache-2.0"}
@@ -29,7 +29,7 @@ classifiers = [
 
 dependencies = [
     "sqlmesh>=0.236.1",
-    "adbc-driver-gizmosql>=2.0.0",
+    "adbc-driver-gizmosql>=2.0.8",
 ]
 
 [project.optional-dependencies]
