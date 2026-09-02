@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- `uv.lock`: `adbc-driver-gizmosql` 2.0.0 -> 2.0.10 (the lock had never been
+  re-resolved since the 2.x floor moved to >= 2.0.8, so `uv sync` installed
+  a driver older than `pyproject.toml` allowed). Unit and non-DuckLake
+  integration suites pass on 2.0.10.
+
 ## [0.3.1] - 2026-08-24
 
 ### Changed

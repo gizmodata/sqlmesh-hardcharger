@@ -10,19 +10,19 @@ resolution-markers = [
 
 [[package]]
 name = "adbc-driver-gizmosql"
-version = "2.0.0"
+version = "2.0.10"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "adbc-driver-manager" },
     { name = "pyarrow" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d5/b3/1a784381b78b86a7559254a7aa65b4346af375d554ae481cc7ec6fed6cc4/adbc_driver_gizmosql-2.0.0-py3-none-macosx_11_0_universal2.whl", hash = "sha256:ef1ba7fcf2b92b010c4a65ae7a098222b020005fe38de6d26074167ceca5c775", size = 7572592, upload-time = "2026-07-29T13:08:08.729Z" },
-    { url = "https://files.pythonhosted.org/packages/12/7f/195eec089b31a53c9e58bd8a5452f5cb7f3ec40053dbc8cd3f1148d3c61d/adbc_driver_gizmosql-2.0.0-py3-none-macosx_11_0_x86_64.whl", hash = "sha256:92d604cde2eb68e18f0528ffcb583bea0759ea9fc0e6bf6ca8e4d12443eb4d63", size = 8163391, upload-time = "2026-07-29T13:08:11.936Z" },
-    { url = "https://files.pythonhosted.org/packages/55/aa/05192f9955756549db86a7172955402f1e195b82ae1c01c657d057ba8017/adbc_driver_gizmosql-2.0.0-py3-none-manylinux_2_34_aarch64.whl", hash = "sha256:6f6b5f80b90286427b80a2781421a7b23fbc96726879318ea54f62b2b1fdd126", size = 13799635, upload-time = "2026-07-29T13:08:14.124Z" },
-    { url = "https://files.pythonhosted.org/packages/fe/5c/4be27a85c8e99e34b45cf88ed044c1ad36163aaec8b58c2441cff865d309/adbc_driver_gizmosql-2.0.0-py3-none-manylinux_2_34_x86_64.whl", hash = "sha256:29e53318ba8de1b2bec6d9212d19c477c14d70acb82f28ac81da014b6610929d", size = 15087648, upload-time = "2026-07-29T13:08:16.95Z" },
-    { url = "https://files.pythonhosted.org/packages/92/eb/96739a7408d6760639b1e4bfeab1087ae51b46149fc106999e6fdb778733/adbc_driver_gizmosql-2.0.0-py3-none-win_amd64.whl", hash = "sha256:9eff412ae89dd1405e1a403b5eb03e9af81edb624a36ecc3836fd878e7f99173", size = 14841317, upload-time = "2026-07-29T13:08:20.059Z" },
-    { url = "https://files.pythonhosted.org/packages/72/19/985aa4598c5c39e064a386d11009948ab75bab18de3010e0170395978eba/adbc_driver_gizmosql-2.0.0-py3-none-win_arm64.whl", hash = "sha256:12c671a42073bbc62744613c518940f0ed9bdbd035e2dd04701b2ef79f347a27", size = 13530223, upload-time = "2026-07-29T13:08:22.953Z" },
+    { url = "https://files.pythonhosted.org/packages/d2/c0/9b9fb22a33c4a0806ae5394e8c6548441fb1d40b4c2be9e3e899e55f7d26/adbc_driver_gizmosql-2.0.10-py3-none-macosx_11_0_universal2.whl", hash = "sha256:a295461b006fa94307bbd5e2b84afb9935cf26024077afde7aaaa4580d8cf3d4", size = 7614517, upload-time = "2026-09-02T20:57:12.126Z" },
+    { url = "https://files.pythonhosted.org/packages/e9/d0/db0c330c34790fc6c228ae1cec7742a829279783a37afcbe7377ca29f16c/adbc_driver_gizmosql-2.0.10-py3-none-macosx_11_0_x86_64.whl", hash = "sha256:2d4f5c0084ef560b7c6b78237dd1ea42d11dbb02bfcebc9ddaa3cc3a050aaec9", size = 8218709, upload-time = "2026-09-02T20:57:14.394Z" },
+    { url = "https://files.pythonhosted.org/packages/24/6b/a431b4f0b34dff1584eaf4efedd645590189f168d8f205042024015d40f5/adbc_driver_gizmosql-2.0.10-py3-none-manylinux_2_34_aarch64.whl", hash = "sha256:02fa209e3c3d8b9212ff6c64b80071a51103111d22788ee634967cfebc83e952", size = 13881538, upload-time = "2026-09-02T20:57:16.238Z" },
+    { url = "https://files.pythonhosted.org/packages/37/57/72cf656658391f393ef1a97890a996f10cc87c33de6f44ed00f7e0cef046/adbc_driver_gizmosql-2.0.10-py3-none-manylinux_2_34_x86_64.whl", hash = "sha256:543288aec1fcdd850819d1b5434f522b616f3cf02de26bb3d634f47f301db37b", size = 15172952, upload-time = "2026-09-02T20:57:18.955Z" },
+    { url = "https://files.pythonhosted.org/packages/25/4f/414165850a14533f556f6ee36d1ef92d1576f0ea6b661392d866b71227ae/adbc_driver_gizmosql-2.0.10-py3-none-win_amd64.whl", hash = "sha256:ef4f6b1b2fca566bed873ab9a5d6e5b1535dd932aa42182610f9a0e14447f4c5", size = 14934040, upload-time = "2026-09-02T20:57:21.394Z" },
+    { url = "https://files.pythonhosted.org/packages/71/99/8058fdb453ffaadc55e1a112ad51a6ecc4f2a6f1fa79512d66c5ffe1cf89/adbc_driver_gizmosql-2.0.10-py3-none-win_arm64.whl", hash = "sha256:0d524c4a346e84481b78b3b28b15c369d70594fa99a639461bcd2dead93307c6", size = 13607807, upload-time = "2026-09-02T20:57:23.718Z" },
 ]
 
 [[package]]
@@ -1746,7 +1746,7 @@ wheels = [
 
 [[package]]
 name = "sqlmesh-gizmosql"
-version = "0.3.0"
+version = "0.3.1"
 source = { editable = "." }
 dependencies = [
     { name = "adbc-driver-gizmosql" },
@@ -1764,7 +1764,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "adbc-driver-gizmosql", specifier = ">=2.0.0" },
+    { name = "adbc-driver-gizmosql", specifier = ">=2.0.8" },
     { name = "gizmosql", marker = "extra == 'dev'", specifier = ">=1.35.1" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=2.3.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.1.1" },
