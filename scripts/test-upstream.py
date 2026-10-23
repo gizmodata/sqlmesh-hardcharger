@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import configparser
+import contextlib
 import os
 import shutil
 import subprocess
@@ -87,12 +88,15 @@ def main() -> int:
 
         import hardcharger
 
-        with hardcharger.Server(
-            extra_args=[
-                "--init-sql-commands",
-                f"SET secret_directory='{raw}/secrets'; ATTACH ':memory:' AS testing",
-            ]
-        ) as server:
+        with (
+            contextlib.chdir(root),
+            hardcharger.Server(
+                extra_args=[
+                    "--init-sql-commands",
+                    f"SET secret_directory='{raw}/secrets'; ATTACH ':memory:' AS testing",
+                ]
+            ) as server,
+        ):
             # The same gateway is used by upstream's SQLMesh plan/apply tests.
             (integration / "config.yaml").write_text(
                 "gateways:\n  inttest_duckdb:\n    connection:\n      type: hardcharger\n"

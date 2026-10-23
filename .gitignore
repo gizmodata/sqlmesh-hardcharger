@@ -39,3 +39,8 @@ Thumbs.db
 
 .venv-*/
 .upstream/
+
+logs/
+*.db
+*.duckdb
+*.wal
