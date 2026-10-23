@@ -1,6 +1,6 @@
 # SQLMesh Hardcharger Adapter
 
-![Hardcharger](docs/assets/hardcharger-banner-dark.png)
+![Hardcharger](https://raw.githubusercontent.com/gizmodata/sqlmesh-hardcharger/main/docs/assets/hardcharger-banner-dark.png)
 
 [![CI](https://github.com/gizmodata/sqlmesh-hardcharger/actions/workflows/ci.yml/badge.svg)](https://github.com/gizmodata/sqlmesh-hardcharger/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/sqlmesh-hardcharger)](https://pypi.org/project/sqlmesh-hardcharger/)

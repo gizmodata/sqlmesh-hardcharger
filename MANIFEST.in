@@ -1,0 +1,5 @@
+include CHANGELOG.md Makefile uv.lock
+recursive-include docs *.md *.png
+recursive-include scripts *.py
+recursive-include tests *.py *.yaml
+global-exclude *.py[cod] *.db *.duckdb *.wal *.log
