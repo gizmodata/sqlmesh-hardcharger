@@ -21,7 +21,7 @@
 </p>
 
 
-Run [SQLMesh](https://sqlmesh.com) transformations on [Hardcharger™](https://gizmodata.com/hardcharger), GizmoData's DuckDB 2.0 server. Connect using the native [Hardcharger ADBC driver](https://github.com/gizmodata/hardcharger-adbc) over **Warp SQL HTTP(S)**.
+Run [SQLMesh](https://sqlmesh.readthedocs.io/en/stable/) transformations on [Hardcharger™](https://gizmodata.com/hardcharger), GizmoData's DuckDB 2.0 server. Connect using the native [Hardcharger ADBC driver](https://github.com/gizmodata/hardcharger-adbc) over **Warp SQL HTTP(S)**.
 
 ## Install
 

@@ -29,7 +29,7 @@ Example config.yaml:
 from sqlmesh_hardcharger.adapter import HardchargerEngineAdapter
 from sqlmesh_hardcharger.connection import HardchargerConnectionConfig
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __all__ = ["HardchargerEngineAdapter", "HardchargerConnectionConfig", "register", "__version__"]
 
 _registered = False

@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.1] - 2026-10-23
+
+- Point the README’s SQLMesh link to the verified official documentation, including the published PyPI description.
+
 ## [1.0.0] - 2026-10-23
 
 - Initial Hardcharger release, ported from sqlmesh-gizmosql 0.3.1 with all 55 inherited tests.
