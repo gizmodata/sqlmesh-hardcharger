@@ -1,10 +1,25 @@
-# SQLMesh Hardcharger Adapter
+<p align="center">
+  <a href="https://github.com/gizmodata/hardcharger">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/gizmodata/sqlmesh-hardcharger/main/docs/assets/hardcharger-banner-dark.png">
+      <img src="https://raw.githubusercontent.com/gizmodata/sqlmesh-hardcharger/main/docs/assets/hardcharger-banner-light.png" alt="Hardcharger™" width="400">
+    </picture>
+  </a>
+</p>
 
-![Hardcharger](https://raw.githubusercontent.com/gizmodata/sqlmesh-hardcharger/main/docs/assets/hardcharger-banner-dark.png)
+<h1 align="center">SQLMesh Hardcharger™ Adapter</h1>
 
-[![CI](https://github.com/gizmodata/sqlmesh-hardcharger/actions/workflows/ci.yml/badge.svg)](https://github.com/gizmodata/sqlmesh-hardcharger/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/sqlmesh-hardcharger)](https://pypi.org/project/sqlmesh-hardcharger/)
-[![Python](https://img.shields.io/pypi/pyversions/sqlmesh-hardcharger)](https://pypi.org/project/sqlmesh-hardcharger/)
+<p align="center">
+  <a href="https://github.com/gizmodata/sqlmesh-hardcharger/actions/workflows/ci.yml"><img src="https://github.com/gizmodata/sqlmesh-hardcharger/actions/workflows/ci.yml/badge.svg" alt="CI: full suite on Python 3.11–3.14"></a>
+  <a href="https://pypi.org/project/sqlmesh-hardcharger/"><img src="https://img.shields.io/pypi/v/sqlmesh-hardcharger?logo=pypi" alt="PyPI version"></a>
+  <a href="https://pypi.org/project/sqlmesh-hardcharger/"><img src="https://img.shields.io/badge/Python-3.11–3.14-3776AB?logo=python&amp;logoColor=white" alt="Python 3.11–3.14"></a>
+  <a href="https://pypi.org/project/sqlmesh-hardcharger/"><img src="https://img.shields.io/pepy/dt/sqlmesh-hardcharger.svg" alt="PyPI downloads"></a>
+  <a href="https://github.com/gizmodata/hardcharger-adbc"><img src="https://img.shields.io/badge/driver-Hardcharger%20ADBC-f15a24.svg" alt="Hardcharger ADBC driver"></a>
+  <a href="https://github.com/gizmodata/warp-sql"><img src="https://img.shields.io/badge/protocol-Warp%20SQL-31a8db.svg" alt="Warp SQL protocol"></a>
+  <a href="https://github.com/gizmodata/sqlmesh-hardcharger/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg" alt="Apache 2.0 license"></a>
+  <a href="https://gizmodata.com"><img src="https://img.shields.io/badge/by-GizmoData%E2%84%A2-f15a24.svg" alt="GizmoData™"></a>
+</p>
+
 
 Run [SQLMesh](https://sqlmesh.com) transformations on [Hardcharger™](https://gizmodata.com/hardcharger), GizmoData's DuckDB 2.0 server. Connect using the native [Hardcharger ADBC driver](https://github.com/gizmodata/hardcharger-adbc) over **Warp SQL HTTP(S)**.
 
