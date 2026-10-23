@@ -63,7 +63,7 @@ jobs:
       - name: Run integration tests
         env:
           POSTGRES_HOST: localhost
-          HARDCHARGER_INSTALL_TOKEN: none
+          HARDCHARGER_INSTALL_TOKEN: ${{ github.token }}
         run: uv run pytest -m "integration" --tb=short -v
 
   upstream:
@@ -78,7 +78,7 @@ jobs:
       - run: uv sync --frozen --extra dev --python 3.12
       - name: Run upstream tests against Hardcharger
         env:
-          HARDCHARGER_INSTALL_TOKEN: none
+          HARDCHARGER_INSTALL_TOKEN: ${{ github.token }}
         run: uv run python scripts/test-upstream.py
 
   build:
