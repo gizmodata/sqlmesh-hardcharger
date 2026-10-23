@@ -1,6 +1,6 @@
-"""Unit tests for GizmoSQL engine adapter and connection config.
+"""Unit tests for Hardcharger engine adapter and connection config.
 
-These tests don't require a running GizmoSQL server - they test
+These tests don't require a running Hardcharger server - they test
 configuration validation and adapter properties.
 """
 
@@ -9,16 +9,16 @@ from unittest.mock import MagicMock, patch
 import pytest
 from sqlmesh.utils.errors import ConfigError
 
-from sqlmesh_gizmosql.adapter import GizmoSQLEngineAdapter
-from sqlmesh_gizmosql.connection import GizmoSQLConnectionConfig
+from sqlmesh_hardcharger.adapter import HardchargerEngineAdapter
+from sqlmesh_hardcharger.connection import HardchargerConnectionConfig
 
 
-class TestGizmoSQLConnectionConfig:
-    """Tests for GizmoSQLConnectionConfig."""
+class TestHardchargerConnectionConfig:
+    """Tests for HardchargerConnectionConfig."""
 
     def test_default_values(self):
         """Test default configuration values."""
-        config = GizmoSQLConnectionConfig(
+        config = HardchargerConnectionConfig(
             username="user",
             password="pass",
         )
@@ -33,8 +33,8 @@ class TestGizmoSQLConnectionConfig:
 
     def test_custom_values(self):
         """Test custom configuration values."""
-        config = GizmoSQLConnectionConfig(
-            host="gizmosql.example.com",
+        config = HardchargerConnectionConfig(
+            host="hardcharger.example.com",
             port=12345,
             username="testuser",
             password="testpass",
@@ -44,7 +44,7 @@ class TestGizmoSQLConnectionConfig:
             concurrent_tasks=8,
         )
 
-        assert config.host == "gizmosql.example.com"
+        assert config.host == "hardcharger.example.com"
         assert config.port == 12345
         assert config.username == "testuser"
         assert config.password == "testpass"
@@ -55,7 +55,7 @@ class TestGizmoSQLConnectionConfig:
 
     def test_external_auth_no_credentials(self):
         """Test that auth_type=external works without username/password."""
-        config = GizmoSQLConnectionConfig(
+        config = HardchargerConnectionConfig(
             auth_type="external",
         )
 
@@ -65,23 +65,23 @@ class TestGizmoSQLConnectionConfig:
 
     def test_dialect_is_duckdb(self):
         """Test that the dialect is set to duckdb."""
-        config = GizmoSQLConnectionConfig(
+        config = HardchargerConnectionConfig(
             username="user",
             password="pass",
         )
         assert config.DIALECT == "duckdb"
 
-    def test_type_is_gizmosql(self):
-        """Test that the type is set to gizmosql."""
-        config = GizmoSQLConnectionConfig(
+    def test_type_is_hardcharger(self):
+        """Test that the type is set to hardcharger."""
+        config = HardchargerConnectionConfig(
             username="user",
             password="pass",
         )
-        assert config.type_ == "gizmosql"
+        assert config.type_ == "hardcharger"
 
     def test_get_catalog(self):
         """Test get_catalog returns database."""
-        config = GizmoSQLConnectionConfig(
+        config = HardchargerConnectionConfig(
             username="user",
             password="pass",
             database="mydb",
@@ -90,7 +90,7 @@ class TestGizmoSQLConnectionConfig:
 
     def test_get_catalog_none(self):
         """Test get_catalog returns None when database not set."""
-        config = GizmoSQLConnectionConfig(
+        config = HardchargerConnectionConfig(
             username="user",
             password="pass",
         )
@@ -103,7 +103,7 @@ class TestGizmoSQLConnectionConfig:
         mock_conn.adbc_get_info.return_value = {"vendor_version": "duckdb v1.0.0"}
         mock_connect.return_value = mock_conn
 
-        config = GizmoSQLConnectionConfig(
+        config = HardchargerConnectionConfig(
             host="example.com",
             port=31337,
             username="user",
@@ -119,13 +119,13 @@ class TestGizmoSQLConnectionConfig:
 
         with patch.dict(
             "sys.modules",
-            {"adbc_driver_gizmosql": mock_module, "adbc_driver_gizmosql.dbapi": mock_dbapi},
+            {"adbc_driver_hardcharger": mock_module, "adbc_driver_hardcharger.dbapi": mock_dbapi},
         ):
             factory = config._connection_factory
             factory()
 
         call_kwargs = mock_connect.call_args[1]
-        assert call_kwargs["uri"] == "grpc+tls://example.com:31337"
+        assert call_kwargs["uri"] == "hardcharger://example.com:31337"
         assert call_kwargs["username"] == "user"
         assert call_kwargs["password"] == "pass"
         assert "tls_skip_verify" not in call_kwargs
@@ -137,7 +137,7 @@ class TestGizmoSQLConnectionConfig:
         mock_conn.adbc_get_info.return_value = {"vendor_version": "duckdb v1.0.0"}
         mock_connect.return_value = mock_conn
 
-        config = GizmoSQLConnectionConfig(
+        config = HardchargerConnectionConfig(
             host="example.com",
             port=31337,
             username="user",
@@ -152,13 +152,13 @@ class TestGizmoSQLConnectionConfig:
 
         with patch.dict(
             "sys.modules",
-            {"adbc_driver_gizmosql": mock_module, "adbc_driver_gizmosql.dbapi": mock_dbapi},
+            {"adbc_driver_hardcharger": mock_module, "adbc_driver_hardcharger.dbapi": mock_dbapi},
         ):
             factory = config._connection_factory
             factory()
 
         call_kwargs = mock_connect.call_args[1]
-        assert call_kwargs["uri"] == "grpc://example.com:31337"
+        assert call_kwargs["uri"] == "hardcharger://example.com:31337?tls=false"
 
     def test_connection_factory_with_tls_skip_verify(self):
         """Test connection factory passes tls_skip_verify when configured."""
@@ -167,7 +167,7 @@ class TestGizmoSQLConnectionConfig:
         mock_conn.adbc_get_info.return_value = {"vendor_version": "duckdb v1.0.0"}
         mock_connect.return_value = mock_conn
 
-        config = GizmoSQLConnectionConfig(
+        config = HardchargerConnectionConfig(
             host="example.com",
             port=31337,
             username="user",
@@ -183,7 +183,7 @@ class TestGizmoSQLConnectionConfig:
 
         with patch.dict(
             "sys.modules",
-            {"adbc_driver_gizmosql": mock_module, "adbc_driver_gizmosql.dbapi": mock_dbapi},
+            {"adbc_driver_hardcharger": mock_module, "adbc_driver_hardcharger.dbapi": mock_dbapi},
         ):
             factory = config._connection_factory
             factory()
@@ -198,7 +198,7 @@ class TestGizmoSQLConnectionConfig:
         mock_conn.adbc_get_info.return_value = {"vendor_version": "duckdb v1.0.0"}
         mock_connect.return_value = mock_conn
 
-        config = GizmoSQLConnectionConfig(
+        config = HardchargerConnectionConfig(
             host="example.com",
             port=31337,
             auth_type="external",
@@ -211,7 +211,7 @@ class TestGizmoSQLConnectionConfig:
 
         with patch.dict(
             "sys.modules",
-            {"adbc_driver_gizmosql": mock_module, "adbc_driver_gizmosql.dbapi": mock_dbapi},
+            {"adbc_driver_hardcharger": mock_module, "adbc_driver_hardcharger.dbapi": mock_dbapi},
         ):
             factory = config._connection_factory
             factory()
@@ -228,7 +228,7 @@ class TestGizmoSQLConnectionConfig:
         mock_conn.adbc_get_info.return_value = {"vendor_version": "sqlite v3.40.0"}
         mock_connect.return_value = mock_conn
 
-        config = GizmoSQLConnectionConfig(
+        config = HardchargerConnectionConfig(
             host="example.com",
             port=31337,
             username="user",
@@ -242,36 +242,36 @@ class TestGizmoSQLConnectionConfig:
 
         with patch.dict(
             "sys.modules",
-            {"adbc_driver_gizmosql": mock_module, "adbc_driver_gizmosql.dbapi": mock_dbapi},
+            {"adbc_driver_hardcharger": mock_module, "adbc_driver_hardcharger.dbapi": mock_dbapi},
         ):
             factory = config._connection_factory
-            with pytest.raises(ConfigError, match="Unsupported GizmoSQL server backend"):
+            with pytest.raises(ConfigError, match="Unsupported Hardcharger server backend"):
                 factory()
 
         # Verify connection was closed after rejection
         mock_conn.close.assert_called_once()
 
 
-class TestGizmoSQLEngineAdapter:
-    """Tests for GizmoSQLEngineAdapter properties."""
+class TestHardchargerEngineAdapter:
+    """Tests for HardchargerEngineAdapter properties."""
 
     def test_dialect(self):
         """Test that dialect is duckdb."""
-        assert GizmoSQLEngineAdapter.DIALECT == "duckdb"
+        assert HardchargerEngineAdapter.DIALECT == "duckdb"
 
     def test_supports_transactions(self):
         """Test transactions are supported via SQL statements."""
-        assert GizmoSQLEngineAdapter.SUPPORTS_TRANSACTIONS is True
+        assert HardchargerEngineAdapter.SUPPORTS_TRANSACTIONS is True
 
     def test_supports_create_drop_catalog(self):
         """Test catalog operations are supported."""
-        assert GizmoSQLEngineAdapter.SUPPORTS_CREATE_DROP_CATALOG is True
+        assert HardchargerEngineAdapter.SUPPORTS_CREATE_DROP_CATALOG is True
 
     def test_supported_drop_cascade_object_kinds(self):
         """Test cascade drop is supported for schemas, tables, and views."""
-        assert "SCHEMA" in GizmoSQLEngineAdapter.SUPPORTED_DROP_CASCADE_OBJECT_KINDS
-        assert "TABLE" in GizmoSQLEngineAdapter.SUPPORTED_DROP_CASCADE_OBJECT_KINDS
-        assert "VIEW" in GizmoSQLEngineAdapter.SUPPORTED_DROP_CASCADE_OBJECT_KINDS
+        assert "SCHEMA" in HardchargerEngineAdapter.SUPPORTED_DROP_CASCADE_OBJECT_KINDS
+        assert "TABLE" in HardchargerEngineAdapter.SUPPORTED_DROP_CASCADE_OBJECT_KINDS
+        assert "VIEW" in HardchargerEngineAdapter.SUPPORTED_DROP_CASCADE_OBJECT_KINDS
 
 
 class TestRegistration:
@@ -281,25 +281,25 @@ class TestRegistration:
         """Test that adapter is registered in SQLMesh's dialect map."""
         from sqlmesh.core import engine_adapter
 
-        import sqlmesh_gizmosql  # noqa: F401
+        import sqlmesh_hardcharger  # noqa: F401
 
-        assert "gizmosql" in engine_adapter.DIALECT_TO_ENGINE_ADAPTER
-        assert engine_adapter.DIALECT_TO_ENGINE_ADAPTER["gizmosql"] is GizmoSQLEngineAdapter
+        assert "hardcharger" in engine_adapter.DIALECT_TO_ENGINE_ADAPTER
+        assert engine_adapter.DIALECT_TO_ENGINE_ADAPTER["hardcharger"] is HardchargerEngineAdapter
 
     def test_connection_config_registered(self):
         """Test that connection config is registered in SQLMesh."""
         from sqlmesh.core.config import connection as conn_module
 
-        import sqlmesh_gizmosql  # noqa: F401
+        import sqlmesh_hardcharger  # noqa: F401
 
-        assert "gizmosql" in conn_module.CONNECTION_CONFIG_TO_TYPE
-        assert conn_module.CONNECTION_CONFIG_TO_TYPE["gizmosql"] is GizmoSQLConnectionConfig
+        assert "hardcharger" in conn_module.CONNECTION_CONFIG_TO_TYPE
+        assert conn_module.CONNECTION_CONFIG_TO_TYPE["hardcharger"] is HardchargerConnectionConfig
 
     def test_dialect_type_registered(self):
         """Test that dialect type is registered."""
         from sqlmesh.core.config import connection as conn_module
 
-        import sqlmesh_gizmosql  # noqa: F401
+        import sqlmesh_hardcharger  # noqa: F401
 
-        assert "gizmosql" in conn_module.DIALECT_TO_TYPE
-        assert conn_module.DIALECT_TO_TYPE["gizmosql"] == "duckdb"
+        assert "hardcharger" in conn_module.DIALECT_TO_TYPE
+        assert conn_module.DIALECT_TO_TYPE["hardcharger"] == "duckdb"

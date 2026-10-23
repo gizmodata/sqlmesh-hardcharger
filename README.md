@@ -1,125 +1,125 @@
-# SQLMesh GizmoSQL Adapter
+# SQLMesh Hardcharger Adapter
 
-A [SQLMesh](https://sqlmesh.com) engine adapter for [GizmoSQL](https://github.com/gizmodata/gizmosql) - a database server that uses DuckDB as its execution engine and exposes an Arrow Flight SQL interface for remote connections.
+![Hardcharger](docs/assets/hardcharger-banner-dark.png)
 
-[<img src="https://img.shields.io/badge/GitHub-gizmodata%2Fsqlmesh--gizmosql-blue.svg?logo=Github">](https://github.com/gizmodata/sqlmesh-gizmosql)
-[<img src="https://img.shields.io/badge/GitHub-gizmodata%2Fgizmosql-blue.svg?logo=Github">](https://github.com/gizmodata/gizmosql)
-[![sqlmesh-gizmosql-ci](https://github.com/gizmodata/sqlmesh-gizmosql/actions/workflows/ci.yml/badge.svg)](https://github.com/gizmodata/sqlmesh-gizmosql/actions/workflows/ci.yml)
-[![Supported Python Versions](https://img.shields.io/pypi/pyversions/sqlmesh-gizmosql)](https://pypi.org/project/sqlmesh-gizmosql/)
-[![PyPI version](https://badge.fury.io/py/sqlmesh-gizmosql.svg)](https://badge.fury.io/py/sqlmesh-gizmosql)
-[![PyPI Downloads](https://img.shields.io/pepy/dt/sqlmesh-gizmosql.svg)](https://pypi.org/project/sqlmesh-gizmosql/)
+[![CI](https://github.com/gizmodata/sqlmesh-hardcharger/actions/workflows/ci.yml/badge.svg)](https://github.com/gizmodata/sqlmesh-hardcharger/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/sqlmesh-hardcharger)](https://pypi.org/project/sqlmesh-hardcharger/)
+[![Python](https://img.shields.io/pypi/pyversions/sqlmesh-hardcharger)](https://pypi.org/project/sqlmesh-hardcharger/)
 
-## Installation
+Run [SQLMesh](https://sqlmesh.com) transformations on [Hardcharger™](https://gizmodata.com/hardcharger), GizmoData's DuckDB 2.0 server. Connect using the native [Hardcharger ADBC driver](https://github.com/gizmodata/hardcharger-adbc) over **Warp SQL HTTP(S)**.
+
+## Install
 
 ```bash
-pip install sqlmesh-gizmosql
+pip install sqlmesh-hardcharger
 ```
 
-This will install `sqlmesh` and `adbc-driver-gizmosql` as dependencies.
+Python **3.11 or later**. Installs SQLMesh 0.236.4 (compatible 0.236.x releases) and `adbc-driver-hardcharger>=2.0.2,<3`. SQLGlot stays within SQLMesh's supported 30.8.x range. The local DuckDB package is SQLMesh's dependency; remote queries execute on the Hardcharger server's DuckDB 2.0 engine.
 
-As of v0.3.0, this adapter runs on [adbc-driver-gizmosql](https://pypi.org/project/adbc-driver-gizmosql/) 2.0, powered by the new [native Go GizmoSQL ADBC driver](https://github.com/gizmodata/gizmosql-adbc) — same API as before, with DDL/DML immediate execution, `RETURNING` support, `gizmosql://` URIs, and OAuth/SSO provided by the shared Go driver library used across all languages.
+## Quick start
 
-## Usage
+Add `config.yaml` to your SQLMesh project:
 
-### 1. Import the adapter
+```yaml
+gateways:
+  hardcharger:
+    connection:
+      type: hardcharger
+      host: localhost
+      port: 31337
+      username: "{{ env_var('HARDCHARGER_USERNAME') }}"
+      password: "{{ env_var('HARDCHARGER_PASSWORD') }}"
+      use_encryption: true
+      # database: analytics  # optional existing default catalog
+    state_connection:
+      type: duckdb
+      database: sqlmesh_state.duckdb
 
-Simply import the package before using SQLMesh. The adapter registers itself automatically:
+default_gateway: hardcharger
+model_defaults:
+  dialect: duckdb
+```
+
+Use the included CLI, which registers the adapter **before** SQLMesh loads YAML:
+
+```bash
+sqlmesh-hardcharger info
+sqlmesh-hardcharger plan
+sqlmesh-hardcharger run
+```
+
+It exposes SQLMesh's standard commands and options. For a local server without TLS, explicitly set `use_encryption: false`; otherwise HTTPS and certificate verification are enabled. The adapter builds `hardcharger://host:port` URIs, adding `?tls=false` only for plaintext.
+
+For the standard `sqlmesh` command, import `sqlmesh_hardcharger` in a Python `config.py` before constructing your SQLMesh `Config`. For Python applications:
 
 ```python
-import sqlmesh_gizmosql  # Registers GizmoSQL adapter
+import sqlmesh_hardcharger  # registers type: hardcharger
 from sqlmesh import Context
 
 context = Context(paths="path/to/project")
+try:
+    context.plan(auto_apply=True, no_prompts=True)
+finally:
+    context.close()
 ```
 
-### 2. Configure your connection
-
-Add a GizmoSQL connection to your `config.yaml`:
-
-```yaml
-gateways:
-  my_gizmosql:
-    connection:
-      type: gizmosql
-      host: localhost
-      port: 31337
-      username: your_username
-      password: your_password
-      database: my_database  # optional, default catalog
-      use_encryption: true   # default: true (uses TLS)
-      disable_certificate_verification: false  # for self-signed certs
-```
-
-### 3. Use SQLMesh as normal
-
-```bash
-sqlmesh plan
-sqlmesh run
-```
-
-## Configuration Options
-
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `host` | str | `localhost` | GizmoSQL server hostname |
-| `port` | int | `31337` | GizmoSQL server port |
-| `username` | str | `None` | Authentication username (not needed with `auth_type: external`) |
-| `password` | str | `None` | Authentication password (not needed with `auth_type: external`) |
-| `database` | str | `None` | Default database/catalog |
-| `use_encryption` | bool | `True` | Use TLS encryption |
-| `disable_certificate_verification` | bool | `False` | Skip TLS cert verification |
-| `auth_type` | str | `None` | Authentication type (e.g., `external` for browser-based OAuth/SSO) |
-| `concurrent_tasks` | int | `4` | Max concurrent tasks |
-| `register_comments` | bool | `True` | Register model comments |
-| `pre_ping` | bool | `False` | Pre-ping connections |
-
-### OAuth/SSO Authentication
-
-GizmoSQL supports browser-based OAuth/SSO via `auth_type: external`. When using external auth, no username or password is needed — a browser window will open for authentication:
-
-```yaml
-gateways:
-  my_gizmosql:
-    connection:
-      type: gizmosql
-      host: gizmosql.example.com
-      port: 31337
-      auth_type: external
-      disable_certificate_verification: true  # for self-signed certs
-```
+Use a separate PostgreSQL state connection for production, following [SQLMesh's state connection guidance](https://sqlmesh.readthedocs.io/en/stable/guides/configuration/#state-connection). The local DuckDB state connection above is for development. The tests also exercise state migrations on Hardcharger, but SQLMesh does not recommend this custom engine for production state storage.
 
 ## Features
 
-- **Arrow Flight SQL**: Efficient data transfer using Arrow's columnar format
-- **Full Catalog Support**: Create, drop, and switch between databases
-- **Transaction Support**: Full transaction control via SQL statements
-- **ADBC Bulk Ingestion**: Fast data loading using Arrow-native bulk operations
-- **DuckDB Compatibility**: Uses DuckDB SQL dialect for query generation
+- DuckDB SQL generation, SQLMesh plan/apply/run, incremental models, logical merges, SCD type 2 and table diffs.
+- Arrow-native bulk DataFrame ingestion, including partial source columns, typed nulls and reordered columns.
+- Native ADBC transactions and nested SQLMesh transaction scopes, with rollback on errors.
+- Catalog discovery and switching, automatic schema creation, quoted identifiers and non-default catalogs.
+- DuckLake with PostgreSQL metadata, partitioning and correct cascade behavior, inherited from current SQLMesh.
+- Password, bearer token, browser OAuth/SSO, trusted external identity token and mutual TLS authentication through the native driver.
 
-## Requirements
+## Connection options
 
-- Python >= 3.10
-- SQLMesh >= 0.236.1
-- A running GizmoSQL server with DuckDB backend
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `host` | `localhost` | Server hostname or IPv6 address |
+| `port` | `31337` | Warp SQL port (1–65535) |
+| `username`, `password` | unset | Password sign-in |
+| `access_token` | unset | Hardcharger bearer token; omit password credentials |
+| `subject_token` | unset | Trusted identity-provider token for token exchange; omit other credentials |
+| `auth_type` | unset (password) | `password`, `external`, `client_certificate` or `mtls` |
+| `use_encryption` | `true` | HTTPS; false explicitly opts into plain HTTP |
+| `disable_certificate_verification` | `false` | Development-only TLS verification bypass |
+| `tls_root_certs` | unset | PEM CA text or file path |
+| `tls_client_cert`, `tls_client_key` | unset | PEM text or paths for mTLS |
+| `tls_server_name` | unset | Certificate hostname / SNI override |
+| `database` | unset | Existing catalog to select on each new connection |
+| `concurrent_tasks` | `4` | Concurrent SQLMesh tasks |
+| `register_comments` | `true` | Register model comments |
+| `pre_ping` | `false` | Check pooled connections before use |
 
-## Development
+For browser sign-in, set `auth_type: external` and omit username/password/token. For client-certificate sign-in, set `auth_type: client_certificate`, provide the certificate and key, and omit password/token credentials. See the [driver authentication documentation](https://github.com/gizmodata/hardcharger-adbc/tree/main/python).
+
+Catalog creation attaches a DuckDB file on the **server**. Dropping a catalog detaches it; it never deletes a file on the client or deletes the server's database file. Manage server files through your server administration process. Materialized views, managed models, SQLMesh grant synchronization and custom `when_matched` logical merge clauses are not advertised by this adapter.
+
+## Development and testing
 
 ```bash
-# Clone the repository
-git clone https://github.com/gizmodata/sqlmesh-gizmosql.git
-cd sqlmesh-gizmosql
+uv sync --extra dev --frozen
+uv run ruff check .
+uv run mypy sqlmesh_hardcharger
+uv run pytest  # unit tests
 
-# Install dev dependencies
-pip install -e ".[dev]"
+# All inherited and Hardcharger-specific integration tests, including DuckLake:
+docker compose -p sqlmesh-hardcharger -f tests/integration/docker/compose.hardcharger.yaml up -d --wait
+POSTGRES_HOST=127.0.0.1 POSTGRES_PORT=55441 uv run pytest -m integration
 
-# Run tests
-pytest
-
-# Run linting
-ruff check .
-mypy sqlmesh_gizmosql
+# Current upstream DuckDB and shared engine tests, over a real Hardcharger server:
+uv run python scripts/test-upstream.py
 ```
 
-## License
+The `hardcharger` development dependency downloads and verifies the released server binary on first use. Override it with `HARDCHARGER_SERVER_BINARY` when testing another build. A server is required for integration tests: they fail instead of silently skipping if it cannot start.
 
-Apache 2.0
+All 55 tests from [sqlmesh-gizmosql](https://github.com/gizmodata/sqlmesh-gizmosql/tree/0f4c37e91677b10e0a053cabea812de2ab31403a) are retained. The upstream runner pins SQLMesh v0.236.4 at `f6527ffbd8d54d91e26fab7d36c8f4a061bc6451`, uses the installed SQLMesh package, and replaces connection fixtures without changing assertions. Only the two MotherDuck-specific unit tests are deselected; the upstream suite's own unsupported-feature skips remain visible. Bump the pin and dependency range together when adopting a new SQLMesh API series.
+
+CI tests Python 3.11–3.14, runs the upstream compatibility job, checks types and lint, builds the wheel/sdist, and publishes from version tags using PyPI Trusted Publishing with attestations. See [release setup](docs/releasing.md).
+
+## License and origin
+
+Apache-2.0. Adapted from GizmoData's SQLMesh GizmoSQL adapter, preserving its Git history and tests. DuckDB engine semantics are inherited from Apache-2.0 SQLMesh. Hardcharger and GizmoData are trademarks of GizmoData.

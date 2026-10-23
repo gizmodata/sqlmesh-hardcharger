@@ -1,24 +1,22 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=84.2.1", "wheel>=0.48.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "sqlmesh-gizmosql"
-version = "0.3.1"
-description = "GizmoSQL engine adapter for SQLMesh"
+name = "sqlmesh-hardcharger"
+version = "1.0.0"
+description = "Hardcharger engine adapter for SQLMesh"
 readme = "README.md"
-license = {text = "Apache-2.0"}
-requires-python = ">=3.10"
+license = "Apache-2.0"
+requires-python = ">=3.11"
 authors = [{ name = "Philip Moore", email = "philip@gizmodata.com" }]
-keywords = ["sqlmesh", "gizmosql", "duckdb", "arrow", "flight-sql", "data-engineering"]
+keywords = ["sqlmesh", "hardcharger", "duckdb", "arrow", "warp-sql", "data-engineering"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -28,26 +26,33 @@ classifiers = [
 ]
 
 dependencies = [
-    "sqlmesh>=0.236.1",
-    "adbc-driver-gizmosql>=2.0.8",
+    "sqlmesh>=0.236.4,<0.237",
+    "adbc-driver-hardcharger>=2.0.2,<3",
 ]
+
+[project.scripts]
+sqlmesh-hardcharger = "sqlmesh_hardcharger.cli:main"
 
 [project.optional-dependencies]
 dev = [
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
-    "mypy>=2.3.0",
-    "ruff>=0.16.0",
-    "gizmosql>=1.35.1",
+    "mypy>=2.4.0",
+    "ruff>=0.17.2",
+    "hardcharger>=2.0.1",
+    "pytest-mock>=3.17.0",
+    "pytest-xdist>=3.8.0",
+    "build>=1.6.1",
+    "twine>=7.0.0",
 ]
 
 [project.urls]
-Homepage = "https://github.com/gizmodata/sqlmesh-gizmosql"
-Repository = "https://github.com/gizmodata/sqlmesh-gizmosql"
-Documentation = "https://github.com/gizmodata/sqlmesh-gizmosql#readme"
+Homepage = "https://github.com/gizmodata/sqlmesh-hardcharger"
+Repository = "https://github.com/gizmodata/sqlmesh-hardcharger"
+Documentation = "https://github.com/gizmodata/sqlmesh-hardcharger#readme"
 
 [tool.setuptools.packages.find]
-include = ["sqlmesh_gizmosql*"]
+include = ["sqlmesh_hardcharger*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -60,14 +65,14 @@ markers = [
 ]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
 ignore_missing_imports = true
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "W"]

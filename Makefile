@@ -1,77 +1,45 @@
-.PHONY: install install-dev test unit-test integration-test ducklake-test all-integration-tests docker-up docker-down clean lint format
+.PHONY: install install-dev test unit-test integration-test ducklake-test all-tests upstream-test lint format build docker-up docker-down
 
-# Install the package
+COMPOSE = docker compose -p sqlmesh-hardcharger -f tests/integration/docker/compose.hardcharger.yaml
+
 install:
-	pip install -e .
+	uv sync
 
-# Install with dev dependencies
 install-dev:
-	pip install -e ".[dev]"
+	uv sync --extra dev --frozen
 
-# Run all tests (unit only, integration requires Docker)
 test: unit-test
 
-# Run unit tests only
 unit-test:
-	pytest tests/test_gizmosql.py -v
+	uv run pytest -m "not integration"
 
-# Bring up the PostgreSQL service the DuckLake tests rely on. The
-# GizmoSQL server itself is started as a subprocess by the pytest
-# fixture, so it is no longer part of compose.
+integration-test:
+	uv run pytest -m "integration and not ducklake"
+
 docker-up:
-	docker compose -f tests/integration/docker/compose.gizmosql.yaml up -d
+	$(COMPOSE) up -d --wait
 
 docker-down:
-	docker compose -f tests/integration/docker/compose.gizmosql.yaml down -v
+	$(COMPOSE) down
 
-# Run GizmoSQL-only integration tests (no Docker required).
-integration-test:
-	pytest -m "integration and not ducklake" tests/integration/ -v --tb=short
-
-# Run DuckLake integration tests (requires PostgreSQL via docker-up).
 ducklake-test: docker-up
-	pytest -m ducklake tests/integration/ -v --tb=short
-	$(MAKE) docker-down
+	POSTGRES_HOST=127.0.0.1 POSTGRES_PORT=55441 uv run pytest -m ducklake
 
-# Run all integration tests (requires PostgreSQL via docker-up).
-all-integration-tests: docker-up
-	pytest -m integration tests/integration/ -v --tb=short
-	$(MAKE) docker-down
+all-tests: docker-up
+	POSTGRES_HOST=127.0.0.1 POSTGRES_PORT=55441 uv run pytest -m "integration or not integration"
 
-# Run all tests including integration
-all-tests: unit-test all-integration-tests
+upstream-test:
+	uv run python scripts/test-upstream.py
 
-# Lint the code
 lint:
-	ruff check .
-	mypy sqlmesh_gizmosql
+	uv run ruff check .
+	uv run ruff format --check .
+	uv run mypy sqlmesh_hardcharger
 
-# Format the code
 format:
-	ruff format .
-	ruff check --fix .
+	uv run ruff check --fix .
+	uv run ruff format .
 
-# Clean build artifacts
-clean:
-	rm -rf build/
-	rm -rf dist/
-	rm -rf *.egg-info/
-	rm -rf .pytest_cache/
-	rm -rf .mypy_cache/
-	rm -rf .ruff_cache/
-	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
-
-# Build the package
-build: clean
-	pip install build
-	python -m build
-
-# Upload to PyPI (requires twine and credentials)
-publish: build
-	pip install twine
-	twine upload dist/*
-
-# Upload to TestPyPI first
-publish-test: build
-	pip install twine
-	twine upload --repository testpypi dist/*
+build:
+	uv run python -m build
+	uv run twine check --strict dist/*

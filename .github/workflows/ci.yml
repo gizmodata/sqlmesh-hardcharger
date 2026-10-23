@@ -9,6 +9,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Test Python ${{ matrix.python-version }}
@@ -16,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
 
     services:
       postgres:
@@ -41,37 +44,47 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Cache pip dependencies
-        uses: actions/cache@v6
+      - uses: astral-sh/setup-uv@v10
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+          enable-cache: true
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]"
+        run: uv sync --frozen --extra dev --python ${{ matrix.python-version }}
 
       - name: Lint with ruff
-        run: ruff check .
+        run: uv run ruff check .
 
       - name: Type check with mypy
-        run: mypy sqlmesh_gizmosql || true
+        run: uv run mypy sqlmesh_hardcharger
 
       - name: Run unit tests
-        run: pytest -m "not integration" --tb=short
+        run: uv run pytest -m "not integration" --tb=short
 
       - name: Run integration tests
         env:
           POSTGRES_HOST: localhost
-        run: pytest -m "integration" --tb=short -v
+          HARDCHARGER_INSTALL_TOKEN: none
+        run: uv run pytest -m "integration" --tb=short -v
+
+  upstream:
+    name: Upstream SQLMesh compatibility
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v10
+      - run: uv sync --frozen --extra dev --python 3.12
+      - name: Run upstream tests against Hardcharger
+        env:
+          HARDCHARGER_INSTALL_TOKEN: none
+        run: uv run python scripts/test-upstream.py
 
   build:
     name: Build Package
     runs-on: ubuntu-latest
-    needs: test
+    needs: [test, upstream]
 
     steps:
       - uses: actions/checkout@v7
@@ -84,8 +97,30 @@ jobs:
       - name: Install build tools
         run: python -m pip install --upgrade pip build
 
+      - name: Validate release version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          python - <<'PYVERSION'
+          import ast, os, pathlib, tomllib
+          version = tomllib.loads(pathlib.Path("pyproject.toml").read_text())["project"]["version"]
+          assert os.environ["GITHUB_REF_NAME"] == f"v{version}"
+          module = ast.parse(pathlib.Path("sqlmesh_hardcharger/__init__.py").read_text())
+          package_version = next(ast.literal_eval(n.value) for n in module.body if isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "__version__" for t in n.targets))
+          assert package_version == version
+          PYVERSION
+
       - name: Build package
         run: python -m build --sdist --wheel --outdir dist/
+
+      - name: Check package metadata
+        run: pip install twine && twine check --strict dist/*
+
+      - name: Verify installed wheel
+        run: |
+          pip install dist/*.whl
+          cd /tmp
+          sqlmesh-hardcharger --help
+          python -c 'from sqlmesh_hardcharger import HardchargerConnectionConfig; assert HardchargerConnectionConfig().type_ == "hardcharger"'
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v7
@@ -97,7 +132,7 @@ jobs:
   publish-pypi:
     name: Publish to PyPI
     runs-on: ubuntu-latest
-    needs: [test, build]
+    needs: [test, upstream, build]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     environment: release
     permissions:

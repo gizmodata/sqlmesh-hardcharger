@@ -1,67 +1,67 @@
-"""Integration tests for GizmoSQL engine adapter.
+"""Integration tests for Hardcharger engine adapter.
 
-The GizmoSQL server is started as a subprocess by the shared
-``gizmosql_adapter`` fixture in ``conftest.py``; no separate Docker step
+The Hardcharger server is started as a subprocess by the shared
+``hardcharger_adapter`` fixture in ``conftest.py``; no separate Docker step
 is required. ``pytest -m integration tests/integration/`` is enough.
 """
 
 import pytest
 from sqlglot import exp
 
-from sqlmesh_gizmosql import GizmoSQLEngineAdapter
+from sqlmesh_hardcharger import HardchargerEngineAdapter
 
 pytestmark = [pytest.mark.integration]
 
 
-def test_connection(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_connection(hardcharger_adapter: HardchargerEngineAdapter):
     """Test that we can connect and execute a simple query."""
-    cursor = gizmosql_adapter.connection.cursor()
+    cursor = hardcharger_adapter.connection.cursor()
     cursor.execute("SELECT 1")
     result = cursor.fetchone()
     assert result[0] == 1
 
 
-def test_dialect(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_dialect(hardcharger_adapter: HardchargerEngineAdapter):
     """Test that the adapter uses the DuckDB dialect."""
-    assert gizmosql_adapter.dialect == "duckdb"
+    assert hardcharger_adapter.dialect == "duckdb"
 
 
-def test_create_and_drop_schema(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_create_and_drop_schema(hardcharger_adapter: HardchargerEngineAdapter):
     """Test creating and dropping schemas."""
-    schema_name = "test_gizmosql_schema"
+    schema_name = "test_hardcharger_schema"
 
     # Clean up if exists
-    gizmosql_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
+    hardcharger_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
 
     # Create schema
-    gizmosql_adapter.create_schema(schema_name)
+    hardcharger_adapter.create_schema(schema_name)
 
     # Verify it exists by selecting from information_schema
-    result = gizmosql_adapter.fetchone(
+    result = hardcharger_adapter.fetchone(
         f"SELECT schema_name FROM information_schema.schemata WHERE schema_name = '{schema_name}'"
     )
     assert result is not None
     assert result[0] == schema_name
 
     # Drop schema
-    gizmosql_adapter.drop_schema(schema_name, cascade=True)
+    hardcharger_adapter.drop_schema(schema_name, cascade=True)
 
     # Verify it's gone
-    result = gizmosql_adapter.fetchone(
+    result = hardcharger_adapter.fetchone(
         f"SELECT schema_name FROM information_schema.schemata WHERE schema_name = '{schema_name}'"
     )
     assert result is None
 
 
-def test_create_table_and_insert(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_create_table_and_insert(hardcharger_adapter: HardchargerEngineAdapter):
     """Test creating a table and inserting data."""
-    schema_name = "test_gizmosql_table_schema"
+    schema_name = "test_hardcharger_table_schema"
     table_name = f"{schema_name}.test_table"
 
     try:
         # Setup
-        gizmosql_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
-        gizmosql_adapter.create_schema(schema_name)
+        hardcharger_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
+        hardcharger_adapter.create_schema(schema_name)
 
         # Create table
         columns_to_types = {
@@ -69,15 +69,15 @@ def test_create_table_and_insert(gizmosql_adapter: GizmoSQLEngineAdapter):
             "name": exp.DataType.build("VARCHAR"),
             "value": exp.DataType.build("DOUBLE"),
         }
-        gizmosql_adapter.create_table(table_name, columns_to_types)
+        hardcharger_adapter.create_table(table_name, columns_to_types)
 
         # Insert data using SQL
-        gizmosql_adapter.execute(
+        hardcharger_adapter.execute(
             f"INSERT INTO {table_name} (id, name, value) VALUES (1, 'test', 3.14)"
         )
 
         # Query data
-        result = gizmosql_adapter.fetchone(f"SELECT * FROM {table_name}")
+        result = hardcharger_adapter.fetchone(f"SELECT * FROM {table_name}")
         assert result is not None
         assert result[0] == 1
         assert result[1] == "test"
@@ -85,14 +85,14 @@ def test_create_table_and_insert(gizmosql_adapter: GizmoSQLEngineAdapter):
 
     finally:
         # Cleanup
-        gizmosql_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
+        hardcharger_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
 
 
-def test_fetchdf(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_fetchdf(hardcharger_adapter: HardchargerEngineAdapter):
     """Test fetching results as a pandas DataFrame."""
     import pandas as pd
 
-    df = gizmosql_adapter.fetchdf("SELECT 1 as a, 2 as b, 'hello' as c")
+    df = hardcharger_adapter.fetchdf("SELECT 1 as a, 2 as b, 'hello' as c")
 
     assert isinstance(df, pd.DataFrame)
     assert len(df) == 1
@@ -102,72 +102,72 @@ def test_fetchdf(gizmosql_adapter: GizmoSQLEngineAdapter):
     assert df["c"].iloc[0] == "hello"
 
 
-def test_fetchall(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_fetchall(hardcharger_adapter: HardchargerEngineAdapter):
     """Test fetchall returns list of tuples."""
-    result = gizmosql_adapter.fetchall("SELECT 1 as a, 2 as b UNION ALL SELECT 3, 4")
+    result = hardcharger_adapter.fetchall("SELECT 1 as a, 2 as b UNION ALL SELECT 3, 4")
 
     assert len(result) == 2
 
 
-def test_fetchone(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_fetchone(hardcharger_adapter: HardchargerEngineAdapter):
     """Test fetchone returns a single row."""
-    result = gizmosql_adapter.fetchone("SELECT 42 as answer, 'hello' as greeting")
+    result = hardcharger_adapter.fetchone("SELECT 42 as answer, 'hello' as greeting")
 
     assert result is not None
     assert result[0] == 42
     assert result[1] == "hello"
 
 
-def test_table_exists(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_table_exists(hardcharger_adapter: HardchargerEngineAdapter):
     """Test checking if a table exists."""
-    schema_name = "test_gizmosql_exists_schema"
+    schema_name = "test_hardcharger_exists_schema"
     table_name = f"{schema_name}.test_exists_table"
 
     try:
         # Setup
-        gizmosql_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
-        gizmosql_adapter.create_schema(schema_name)
+        hardcharger_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
+        hardcharger_adapter.create_schema(schema_name)
 
         # Table should not exist yet
-        assert not gizmosql_adapter.table_exists(exp.to_table(table_name))
+        assert not hardcharger_adapter.table_exists(exp.to_table(table_name))
 
         # Create table
         columns_to_types = {"id": exp.DataType.build("INT")}
-        gizmosql_adapter.create_table(table_name, columns_to_types)
+        hardcharger_adapter.create_table(table_name, columns_to_types)
 
         # Table should exist now
-        assert gizmosql_adapter.table_exists(exp.to_table(table_name))
+        assert hardcharger_adapter.table_exists(exp.to_table(table_name))
 
     finally:
         # Cleanup
-        gizmosql_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
+        hardcharger_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
 
 
-def test_get_current_catalog(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_get_current_catalog(hardcharger_adapter: HardchargerEngineAdapter):
     """Test getting the current catalog."""
-    catalog = gizmosql_adapter.get_current_catalog()
-    # GizmoSQL should return a catalog name
+    catalog = hardcharger_adapter.get_current_catalog()
+    # Hardcharger should return a catalog name
     assert catalog is not None
     assert isinstance(catalog, str)
 
 
-def test_get_current_schema(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_get_current_schema(hardcharger_adapter: HardchargerEngineAdapter):
     """Test getting the current schema via SQL."""
-    result = gizmosql_adapter.fetchone("SELECT current_schema()")
+    result = hardcharger_adapter.fetchone("SELECT current_schema()")
     assert result is not None
     assert isinstance(result[0], str)
 
 
-def test_information_schema_access(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_information_schema_access(hardcharger_adapter: HardchargerEngineAdapter):
     """Test that we can query information_schema."""
-    result = gizmosql_adapter.fetchall(
+    result = hardcharger_adapter.fetchall(
         "SELECT schema_name FROM information_schema.schemata LIMIT 5"
     )
     assert result is not None
     assert len(result) > 0
 
 
-def test_complex_query(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_complex_query(hardcharger_adapter: HardchargerEngineAdapter):
     """Test a more complex analytical query with CTEs and aggregations."""
     query = """
     WITH numbers AS (
@@ -180,7 +180,7 @@ def test_complex_query(gizmosql_adapter: GizmoSQLEngineAdapter):
         MAX(n) as maximum
     FROM numbers
     """
-    result = gizmosql_adapter.fetchone(query)
+    result = hardcharger_adapter.fetchone(query)
 
     assert result is not None
     assert result[0] == 15  # sum
@@ -189,7 +189,7 @@ def test_complex_query(gizmosql_adapter: GizmoSQLEngineAdapter):
     assert result[3] == 5  # max
 
 
-def test_fetchdf_with_types(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_fetchdf_with_types(hardcharger_adapter: HardchargerEngineAdapter):
     """Test fetching DataFrame with various data types."""
     import pandas as pd
 
@@ -200,7 +200,7 @@ def test_fetchdf_with_types(gizmosql_adapter: GizmoSQLEngineAdapter):
         'test'::VARCHAR as varchar_col,
         true::BOOLEAN as bool_col
     """
-    df = gizmosql_adapter.fetchdf(query)
+    df = hardcharger_adapter.fetchdf(query)
 
     assert isinstance(df, pd.DataFrame)
     assert len(df) == 1
@@ -210,7 +210,7 @@ def test_fetchdf_with_types(gizmosql_adapter: GizmoSQLEngineAdapter):
     assert df["bool_col"].iloc[0] == True  # noqa: E712 - numpy bool comparison
 
 
-def test_query_with_expressions(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_query_with_expressions(hardcharger_adapter: HardchargerEngineAdapter):
     """Test querying using SQLGlot expressions."""
     from sqlglot import exp, select
 
@@ -219,13 +219,13 @@ def test_query_with_expressions(gizmosql_adapter: GizmoSQLEngineAdapter):
         exp.Literal.string("hello").as_("b"),
     )
 
-    result = gizmosql_adapter.fetchone(query)
+    result = hardcharger_adapter.fetchone(query)
     assert result is not None
     assert result[0] == 1
     assert result[1] == "hello"
 
 
-def test_dataframe_bulk_ingestion(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_dataframe_bulk_ingestion(hardcharger_adapter: HardchargerEngineAdapter):
     """Test bulk DataFrame ingestion using ADBC adbc_ingest."""
     import pandas as pd
 
@@ -234,8 +234,8 @@ def test_dataframe_bulk_ingestion(gizmosql_adapter: GizmoSQLEngineAdapter):
 
     try:
         # Setup
-        gizmosql_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
-        gizmosql_adapter.create_schema(schema_name)
+        hardcharger_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
+        hardcharger_adapter.create_schema(schema_name)
 
         # Create a test DataFrame
         df = pd.DataFrame(
@@ -252,17 +252,17 @@ def test_dataframe_bulk_ingestion(gizmosql_adapter: GizmoSQLEngineAdapter):
             "name": exp.DataType.build("VARCHAR"),
             "value": exp.DataType.build("DOUBLE"),
         }
-        gizmosql_adapter.create_table(table_name, columns_to_types)
+        hardcharger_adapter.create_table(table_name, columns_to_types)
 
         # Use replace_query with DataFrame (this uses _df_to_source_queries internally)
-        gizmosql_adapter.replace_query(
+        hardcharger_adapter.replace_query(
             table_name,
             df,
             columns_to_types,
         )
 
         # Verify data was loaded
-        result = gizmosql_adapter.fetchall(f"SELECT * FROM {table_name} ORDER BY id")
+        result = hardcharger_adapter.fetchall(f"SELECT * FROM {table_name} ORDER BY id")
         assert len(result) == 5
         assert result[0][0] == 1
         assert result[0][1] == "alice"
@@ -272,10 +272,10 @@ def test_dataframe_bulk_ingestion(gizmosql_adapter: GizmoSQLEngineAdapter):
 
     finally:
         # Cleanup
-        gizmosql_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
+        hardcharger_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
 
 
-def test_create_table_in_nonexistent_schema(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_create_table_in_nonexistent_schema(hardcharger_adapter: HardchargerEngineAdapter):
     """Test creating a table in a schema that doesn't exist.
 
     This tests the scenario where SQLMesh tries to create a table like:
@@ -288,10 +288,10 @@ def test_create_table_in_nonexistent_schema(gizmosql_adapter: GizmoSQLEngineAdap
 
     try:
         # Ensure schema does NOT exist
-        gizmosql_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
+        hardcharger_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
 
         # Verify schema doesn't exist
-        result = gizmosql_adapter.fetchone(
+        result = hardcharger_adapter.fetchone(
             f"SELECT schema_name FROM information_schema.schemata WHERE schema_name = '{schema_name}'"
         )
         assert result is None, "Schema should not exist before test"
@@ -301,28 +301,28 @@ def test_create_table_in_nonexistent_schema(gizmosql_adapter: GizmoSQLEngineAdap
             "id": exp.DataType.build("INT"),
             "name": exp.DataType.build("VARCHAR"),
         }
-        gizmosql_adapter.create_table(table_name, columns_to_types)
+        hardcharger_adapter.create_table(table_name, columns_to_types)
 
         # Verify schema was auto-created
-        result = gizmosql_adapter.fetchone(
+        result = hardcharger_adapter.fetchone(
             f"SELECT schema_name FROM information_schema.schemata WHERE schema_name = '{schema_name}'"
         )
         assert result is not None, "Schema should have been auto-created"
         assert result[0] == schema_name
 
         # Verify table exists and is usable
-        gizmosql_adapter.execute(f"INSERT INTO {table_name} (id, name) VALUES (1, 'test')")
-        result = gizmosql_adapter.fetchone(f"SELECT * FROM {table_name}")
+        hardcharger_adapter.execute(f"INSERT INTO {table_name} (id, name) VALUES (1, 'test')")
+        result = hardcharger_adapter.fetchone(f"SELECT * FROM {table_name}")
         assert result is not None
         assert result[0] == 1
         assert result[1] == "test"
 
     finally:
         # Cleanup
-        gizmosql_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
+        hardcharger_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
 
 
-def test_ctas_in_nonexistent_schema(gizmosql_adapter: GizmoSQLEngineAdapter):
+def test_ctas_in_nonexistent_schema(hardcharger_adapter: HardchargerEngineAdapter):
     """Test CTAS (CREATE TABLE AS SELECT) in a schema that doesn't exist.
 
     This tests the scenario from the user error where SQLMesh generates:
@@ -335,10 +335,10 @@ def test_ctas_in_nonexistent_schema(gizmosql_adapter: GizmoSQLEngineAdapter):
 
     try:
         # Ensure schema does NOT exist
-        gizmosql_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
+        hardcharger_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
 
         # Verify schema doesn't exist
-        result = gizmosql_adapter.fetchone(
+        result = hardcharger_adapter.fetchone(
             f"SELECT schema_name FROM information_schema.schemata WHERE schema_name = '{schema_name}'"
         )
         assert result is None, "Schema should not exist before test"
@@ -352,20 +352,20 @@ def test_ctas_in_nonexistent_schema(gizmosql_adapter: GizmoSQLEngineAdapter):
             exp.Literal.number(1).as_("id"),
             exp.Literal.string("hello").as_("value"),
         )
-        gizmosql_adapter.ctas(table_name, query, columns_to_types)
+        hardcharger_adapter.ctas(table_name, query, columns_to_types)
 
         # Verify schema was auto-created
-        result = gizmosql_adapter.fetchone(
+        result = hardcharger_adapter.fetchone(
             f"SELECT schema_name FROM information_schema.schemata WHERE schema_name = '{schema_name}'"
         )
         assert result is not None, "Schema should have been auto-created"
 
         # Verify table exists with data
-        result = gizmosql_adapter.fetchone(f"SELECT * FROM {table_name}")
+        result = hardcharger_adapter.fetchone(f"SELECT * FROM {table_name}")
         assert result is not None
         assert result[0] == 1
         assert result[1] == "hello"
 
     finally:
         # Cleanup
-        gizmosql_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
+        hardcharger_adapter.drop_schema(schema_name, ignore_if_not_exists=True, cascade=True)
