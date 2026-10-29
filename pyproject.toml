@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sqlmesh-hardcharger"
-version = "1.0.1"
+version = "1.1.0"
 description = "Hardcharger engine adapter for SQLMesh"
 readme = "README.md"
 license = "Apache-2.0"
@@ -27,7 +27,7 @@ classifiers = [
 
 dependencies = [
     "sqlmesh>=0.236.4,<0.237",
-    "adbc-driver-hardcharger>=2.0.2,<3",
+    "adbc-driver-hardcharger>=2.1.0,<3",
 ]
 
 [project.scripts]
@@ -39,7 +39,7 @@ dev = [
     "pytest-cov>=7.1.0",
     "mypy>=2.4.0",
     "ruff>=0.17.2",
-    "hardcharger>=2.0.1",
+    "hardcharger>=2.3.0",
     "pytest-mock>=3.17.0",
     "pytest-xdist>=3.8.0",
     "build>=1.6.1",

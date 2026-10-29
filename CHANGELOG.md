@@ -1,12 +1,15 @@
 # Changelog
 
-## [Unreleased]
+## [1.1.0] - 2026-10-29
 
 ### Changed
 
 - sqlmesh-hardcharger now uses the Chargewire protocol and drivers, the new name of the protocol the
   Hardcharger ADBC driver speaks. Nothing changes in connection configs, and it still works with
   Hardcharger servers released before the rename.
+- Require `adbc-driver-hardcharger` 2.1.0, the first driver release that speaks Chargewire. The
+  tests run against Hardcharger 2.3.0 (`hardcharger>=2.3.0` in the `dev` extra), and `uv.lock`
+  pins both.
 
 ## [1.0.1] - 2026-10-23
 

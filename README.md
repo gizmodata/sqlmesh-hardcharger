@@ -29,7 +29,7 @@ Run [SQLMesh](https://sqlmesh.readthedocs.io/en/stable/) transformations on [Har
 pip install sqlmesh-hardcharger
 ```
 
-Python **3.11 or later**. Installs SQLMesh 0.236.4 (compatible 0.236.x releases) and `adbc-driver-hardcharger>=2.0.2,<3`. SQLGlot stays within SQLMesh's supported 30.8.x range. The local DuckDB package is SQLMesh's dependency; remote queries execute on the Hardcharger server's DuckDB 2.0 engine.
+Python **3.11 or later**. Installs SQLMesh 0.236.4 (compatible 0.236.x releases) and `adbc-driver-hardcharger>=2.1.0,<3`. SQLGlot stays within SQLMesh's supported 30.8.x range. The local DuckDB package is SQLMesh's dependency; remote queries execute on the Hardcharger server's DuckDB 2.0 engine.
 
 ## Quick start
 
