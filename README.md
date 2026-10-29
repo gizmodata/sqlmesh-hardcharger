@@ -15,13 +15,13 @@
   <a href="https://pypi.org/project/sqlmesh-hardcharger/"><img src="https://img.shields.io/badge/Python-3.11–3.14-3776AB?logo=python&amp;logoColor=white" alt="Python 3.11–3.14"></a>
   <a href="https://pypi.org/project/sqlmesh-hardcharger/"><img src="https://img.shields.io/pepy/dt/sqlmesh-hardcharger.svg" alt="PyPI downloads"></a>
   <a href="https://github.com/gizmodata/hardcharger-adbc"><img src="https://img.shields.io/badge/driver-Hardcharger%20ADBC-f15a24.svg" alt="Hardcharger ADBC driver"></a>
-  <a href="https://github.com/gizmodata/warp-sql"><img src="https://img.shields.io/badge/protocol-Warp%20SQL-31a8db.svg" alt="Warp SQL protocol"></a>
+  <a href="https://github.com/gizmodata/chargewire"><img src="https://img.shields.io/badge/protocol-Chargewire-31a8db.svg" alt="Chargewire protocol"></a>
   <a href="https://github.com/gizmodata/sqlmesh-hardcharger/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg" alt="Apache 2.0 license"></a>
   <a href="https://gizmodata.com"><img src="https://img.shields.io/badge/by-GizmoData%E2%84%A2-f15a24.svg" alt="GizmoData™"></a>
 </p>
 
 
-Run [SQLMesh](https://sqlmesh.readthedocs.io/en/stable/) transformations on [Hardcharger™](https://gizmodata.com/hardcharger), GizmoData's DuckDB 2.0 server. Connect using the native [Hardcharger ADBC driver](https://github.com/gizmodata/hardcharger-adbc) over **Warp SQL HTTP(S)**.
+Run [SQLMesh](https://sqlmesh.readthedocs.io/en/stable/) transformations on [Hardcharger™](https://gizmodata.com/hardcharger), GizmoData's DuckDB 2.0 server. Connect using the native [Hardcharger ADBC driver](https://github.com/gizmodata/hardcharger-adbc) over **Chargewire HTTP(S)**.
 
 ## Install
 
@@ -94,7 +94,7 @@ Use a separate PostgreSQL state connection for production, following [SQLMesh's 
 | Option | Default | Meaning |
 | --- | --- | --- |
 | `host` | `localhost` | Server hostname or IPv6 address |
-| `port` | `31337` | Warp SQL port (1–65535) |
+| `port` | `31337` | Chargewire port (1–65535) |
 | `username`, `password` | unset | Password sign-in |
 | `access_token` | unset | Hardcharger bearer token; omit password credentials |
 | `subject_token` | unset | Trusted identity-provider token for token exchange; omit other credentials |

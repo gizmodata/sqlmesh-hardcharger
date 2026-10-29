@@ -1,4 +1,4 @@
-"""SQLMesh's DuckDB semantics over the native Hardcharger Warp SQL ADBC driver."""
+"""SQLMesh's DuckDB semantics over the native Hardcharger ADBC driver (Chargewire)."""
 
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ class HardchargerEngineAdapter(DuckDBEngineAdapter):
         self.execute(exp.Detach(this=catalog_name, exists=True))
 
     def table_exists(self, table_name: TableName) -> bool:
-        # A failed DESCRIBE aborts a Warp SQL transaction. Existence probes are
+        # A failed DESCRIBE aborts a Chargewire transaction. Existence probes are
         # expected to return False inside plan/migration transactions, so query
         # metadata without issuing a statement against a potentially absent table.
         table = exp.to_table(table_name, dialect=self.dialect)

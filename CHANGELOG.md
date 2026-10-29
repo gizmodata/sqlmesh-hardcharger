@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- sqlmesh-hardcharger now uses the Chargewire protocol and drivers, the new name of the protocol the
+  Hardcharger ADBC driver speaks. Nothing changes in connection configs, and it still works with
+  Hardcharger servers released before the rename.
+
 ## [1.0.1] - 2026-10-23
 
 - Point the README’s SQLMesh link to the verified official documentation, including the published PyPI description.
@@ -7,7 +15,7 @@
 ## [1.0.0] - 2026-10-23
 
 - Initial Hardcharger release, ported from sqlmesh-gizmosql 0.3.1 with all 55 inherited tests.
-- Native Hardcharger ADBC 2.0.2 over Warp SQL HTTP(S), TLS by default, Python 3.11+.
+- Native Hardcharger ADBC 2.0.2 over Chargewire HTTP(S), TLS by default, Python 3.11+.
 - SQLMesh 0.236.4, the latest compatible transitive dependencies, refreshed development/build tools and lockfile.
 - Reuse SQLMesh's current DuckDB implementation, including DuckLake partitioning and case-insensitive cascade detection.
 - Fix partial source-column ingestion, typed missing values, native transaction handling, metadata discovery and quoted schema names.

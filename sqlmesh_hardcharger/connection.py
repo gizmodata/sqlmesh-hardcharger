@@ -39,7 +39,7 @@ class HardchargerConnectionConfig(ConnectionConfig):
     Hardcharger connection configuration.
 
     Hardcharger is a database server that uses DuckDB as its execution engine and
-    exposes Warp SQL over HTTP(S) for remote connections. This configuration
+    exposes Chargewire over HTTP(S) for remote connections. This configuration
     uses the native Hardcharger ADBC driver.
 
     Args:
@@ -98,7 +98,7 @@ class HardchargerConnectionConfig(ConnectionConfig):
         """
         Create a connection factory for Hardcharger using adbc-driver-hardcharger.
 
-        The connection is established using Warp SQL over HTTP(S).
+        The connection is established using Chargewire over HTTP(S).
         """
         import re
 
