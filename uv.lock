@@ -9,18 +9,18 @@ resolution-markers = [
 
 [[package]]
 name = "adbc-driver-hardcharger"
-version = "2.1.0"
+version = "2.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "adbc-driver-manager" },
     { name = "pyarrow" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/99/62/20e4d461495ed740345f395eb1fe99888d9436d7113d6e4380ed59d59ffb/adbc_driver_hardcharger-2.1.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:24fa78b4d92401cb4a678ad190bf320304d54489dd967df8b5e02f6d7a02ec93", size = 9712127, upload-time = "2026-10-29T10:05:19.713Z" },
-    { url = "https://files.pythonhosted.org/packages/a4/4a/c821d2a2d254611b1752235e6ac1fb98002dffa78c86c2e9200924672504/adbc_driver_hardcharger-2.1.0-py3-none-macosx_11_0_x86_64.whl", hash = "sha256:f372fa25375a11c6b1a20238b14dea41c04934ebf339ac7e5fa69c6398b4d13b", size = 10990087, upload-time = "2026-10-29T10:05:22.768Z" },
-    { url = "https://files.pythonhosted.org/packages/f2/5b/e22696abf8c4b239ce36607433ff11293a6a52e4f57baca9d628b49288e3/adbc_driver_hardcharger-2.1.0-py3-none-manylinux1_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:d1a3d888d0b6ff707845d2b8af6f1537cff9b112bcbbe4d9453854d5bee73a44", size = 12017502, upload-time = "2026-10-29T10:05:25.576Z" },
-    { url = "https://files.pythonhosted.org/packages/b1/1d/e0893cb59000a032ffe81432e753cc9493e49622426640c6c01ae1de8d10/adbc_driver_hardcharger-2.1.0-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:f192ba9998d661fb02f1e6c7596a7e9c7f050ed6d795c5eefc43863c4bbfffae", size = 10667864, upload-time = "2026-10-29T10:05:28.874Z" },
-    { url = "https://files.pythonhosted.org/packages/11/53/f1e3dd12a615b44f6e3226bfbd4d7f18a2d4dae7135ef37cebe2c2381b66/adbc_driver_hardcharger-2.1.0-py3-none-win_amd64.whl", hash = "sha256:1f8b0365bb3cd21ae8fe00da069b6568d8f0b3a3c1b6b9e046fdc718c80217a4", size = 11165088, upload-time = "2026-10-29T10:05:32.225Z" },
+    { url = "https://files.pythonhosted.org/packages/ed/2a/0cfa96407b7cec59471f2914506ba7f88ebd4a56e43671d4349e5991ecea/adbc_driver_hardcharger-2.3.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:e1c276f0e86316a2deb1f192f39b5eaffc76c9553f7efc5c6ede27b8fa6880fe", size = 9730144, upload-time = "2026-11-05T11:30:54.442Z" },
+    { url = "https://files.pythonhosted.org/packages/07/e8/18ac8d1eafcf806acbacb11a56227a55820587a9f0317472363d3b7feda6/adbc_driver_hardcharger-2.3.0-py3-none-macosx_11_0_x86_64.whl", hash = "sha256:681dd800b5bcd638aecbbdf6652bc90ef5ec239d46799e12f5442ca0003f30ca", size = 11005529, upload-time = "2026-11-05T11:30:57.087Z" },
+    { url = "https://files.pythonhosted.org/packages/9b/6e/5aef30ea3c4960bf2dbb8e123883fe42ca22367e64e15df273992cbf24dd/adbc_driver_hardcharger-2.3.0-py3-none-manylinux1_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:314b972ec558820243290d96a5efe925300ba22f0abd3e697ecb678262af8aa8", size = 12036671, upload-time = "2026-11-05T11:30:59.859Z" },
+    { url = "https://files.pythonhosted.org/packages/41/3a/26fd66cec372686f7f4e31eb718233f3b2db68cbc677db1cc68d768840cc/adbc_driver_hardcharger-2.3.0-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:06121c04b388a8d31f69206dd2cbd517bd4ef1ebc70b77fb2f25208b9964c04b", size = 10685093, upload-time = "2026-11-05T11:31:02.52Z" },
+    { url = "https://files.pythonhosted.org/packages/25/e7/45a5ac7f8a78ccf1f29605aab584c1fe27c351c5a1de1419ad4289917576/adbc_driver_hardcharger-2.3.0-py3-none-win_amd64.whl", hash = "sha256:1ff6c8aa8ce38933cf4375baf8b0f99cc7e96ec79aecbda46c96eca1602b80de", size = 11186302, upload-time = "2026-11-05T11:31:05.337Z" },
 ]
 
 [[package]]
@@ -665,11 +665,11 @@ wheels = [
 
 [[package]]
 name = "hardcharger"
-version = "2.3.0"
+version = "2.7.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/bd/76/51a51fe892a9f55ccb8521a5f5f3baad55440964a0232579e08218f8d3c4/hardcharger-2.3.0.tar.gz", hash = "sha256:24c1416e592d6f814b375330c25aa042e8eb69c4e26377b0868a918938a54be9", size = 22482, upload-time = "2026-10-29T09:12:53.678Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/76/32/5b6c8861f9b34bb862fe46afca19078002ef68057828c2b1385567606e4e/hardcharger-2.7.0.tar.gz", hash = "sha256:fcc37c7a1715102367f4df4e3be8f673cc8f44f799b3cc33cb79f86381ddb9ac", size = 22572, upload-time = "2026-11-05T05:05:51.216Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e1/37/e1bf9fdcd3e778b3f44f489cde018e330c1835038f978d9b55f517ea0629/hardcharger-2.3.0-py3-none-any.whl", hash = "sha256:391920505e77834f3eaf31158b0b8832e9dcc50361d8fe872998814a1db20eac", size = 14148, upload-time = "2026-10-29T09:12:52.448Z" },
+    { url = "https://files.pythonhosted.org/packages/47/16/7ddfedf1eb47dffaf0766c194240f1d0743b124225cb0e0ba35517cda017/hardcharger-2.7.0-py3-none-any.whl", hash = "sha256:f46383254173b5d619df7c75b448215a73d1ab78bbd8910b1b52975f8c1a11c3", size = 14147, upload-time = "2026-11-05T05:05:49.767Z" },
 ]
 
 [[package]]
@@ -2245,7 +2245,7 @@ wheels = [
 
 [[package]]
 name = "sqlmesh-hardcharger"
-version = "1.1.0"
+version = "1.1.1"
 source = { editable = "." }
 dependencies = [
     { name = "adbc-driver-hardcharger" },
@@ -2267,9 +2267,9 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "adbc-driver-hardcharger", specifier = ">=2.1.0,<3" },
+    { name = "adbc-driver-hardcharger", specifier = ">=2.3.0,<3" },
     { name = "build", marker = "extra == 'dev'", specifier = ">=1.6.1" },
-    { name = "hardcharger", marker = "extra == 'dev'", specifier = ">=2.3.0" },
+    { name = "hardcharger", marker = "extra == 'dev'", specifier = ">=2.7.0" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=2.4.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.1.1" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=7.1.0" },

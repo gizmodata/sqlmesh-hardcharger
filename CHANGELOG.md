@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.1.1] - 2026-11-05
+
+### Fixed
+
+- Require `adbc-driver-hardcharger` 2.3.0. A connection to a GizmoData Cloud cluster that is
+  starting again (the server answers `server_resuming`) now waits for it, retrying after each
+  `Retry-After` for up to 600 seconds, instead of failing at once. The driver also re-applies
+  its session settings and session/query tags when the server replaces a lost session (idle
+  eviction, an expired token, idle in a transaction); sqlmesh-hardcharger sets none of those
+  itself, so this matters only for settings applied through the driver.
+
+### Changed
+
+- The tests run against Hardcharger 2.7.0 (`hardcharger>=2.7.0` in the `dev` extra), and
+  `uv.lock` pins both.
+
 ## [1.1.0] - 2026-10-29
 
 ### Changed
