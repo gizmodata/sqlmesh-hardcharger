@@ -86,3 +86,36 @@ def test_yaml_cli_loads_registered_adapter(hardcharger_server, tmp_path):
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "Data warehouse connection succeeded" in result.stdout
+
+
+def test_cli_fetchdf_exits_without_open_statement_error(hardcharger_server, tmp_path):
+    # fetchdf leaves its cursor open; at interpreter shutdown that used to print
+    # "Cannot close AdbcConnection with open AdbcStatement" after the result (issue #2).
+    (tmp_path / "models").mkdir()
+    (tmp_path / "models/example.sql").write_text(
+        "MODEL (name analytics.example, kind FULL); SELECT 42 AS answer;"
+    )
+    (tmp_path / "config.yaml").write_text(
+        "gateways:\n  hc:\n    connection:\n      type: hardcharger\n"
+        f"      host: {hardcharger_server.host}\n      port: {hardcharger_server.port}\n"
+        f"      username: {hardcharger_server.username}\n      password: {hardcharger_server.password}\n"
+        "      use_encryption: false\n    state_connection:\n      type: duckdb\n"
+        "model_defaults:\n  dialect: duckdb\n"
+    )
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "from sqlmesh_hardcharger.cli import main; main()",
+            "--paths",
+            str(tmp_path),
+            "fetchdf",
+            "SELECT 42 AS answer",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "42" in result.stdout
+    assert "Cannot close AdbcConnection" not in result.stderr, result.stderr
+    assert "Exception ignored" not in result.stderr, result.stderr

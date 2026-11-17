@@ -6,7 +6,9 @@ Provides the connection configuration class for Hardcharger servers.
 
 from __future__ import annotations
 
+import atexit
 import typing as t
+import weakref
 
 from pydantic import Field
 from sqlmesh.core.config.common import concurrent_tasks_validator
@@ -16,6 +18,23 @@ from sqlmesh.utils.errors import ConfigError
 from sqlmesh.utils.pydantic import model_validator
 
 from sqlmesh_hardcharger.adapter import HardchargerEngineAdapter
+
+# Every connection the factory opened that may still be open. A process that exits without
+# closing them (the CLI's fetchdf, a script) leaves the cleanup to garbage collection at
+# shutdown, where a cursor can be collected before its connection: adbc-driver-manager then
+# finds a statement it can no longer close and prints "Cannot close AdbcConnection with open
+# AdbcStatement". Closing them at exit, while their cursors are still alive, closes each
+# cursor first.
+_open_connections: "weakref.WeakSet[t.Any]" = weakref.WeakSet()
+
+
+@atexit.register
+def _close_open_connections() -> None:
+    for conn in list(_open_connections):
+        try:
+            conn.close()
+        except Exception:  # noqa: BLE001 - a failed close must not hide the process's own exit
+            pass
 
 
 def _hardcharger_import_validator(cls: t.Any, data: t.Any) -> t.Any:
@@ -154,6 +173,7 @@ class HardchargerConnectionConfig(ConnectionConfig):
                     "This adapter only supports the DuckDB backend for Hardcharger."
                 )
 
+            _open_connections.add(conn)
             return conn
 
         return connect

@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.2] - 2026-11-17
+
+### Fixed
+
+- A process that exits without closing its connections no longer prints `Exception ignored ...
+  RuntimeError: Cannot close AdbcConnection with open AdbcStatement` after its output
+  ([#2](https://github.com/gizmodata/sqlmesh-hardcharger/issues/2)). `sqlmesh-hardcharger fetchdf`
+  did this every time: the result was right and the exit status 0, but at shutdown a cursor could
+  be collected before its connection, leaving a statement the driver manager couldn't close.
+  Connections still open at exit are now closed first, cursors and all.
+
 ## [1.1.1] - 2026-11-05
 
 ### Fixed
